@@ -266,9 +266,9 @@
         //Read the RGB values from the context's buffer
         uint8_t *data = CGBitmapContextGetData(ctx);
         color = [UIColor colorWithRed:data[2] / 255.0f
-                                          green:data[1] / 255.0f
-                                           blue:data[0] / 255.0f
-                                          alpha:1];
+                                green:data[1] / 255.0f
+                                 blue:data[0] / 255.0f
+                                alpha:1];
         UIGraphicsEndImageContext();
     }
     
@@ -347,10 +347,10 @@
 }
 
 
-/* 
+/*
  Deprecated as of version 1.1.0 Please use the method below this one.
-*/
- 
+ */
+
 + (UIColor *)colorWithContrastingBlackOrWhiteColorOn:(UIColor *)backgroundColor {
     
     //Check if UIColor is a gradient aka a pattern
@@ -388,7 +388,7 @@
     }
     
     // Relative luminance in colorimetric spaces - http://en.wikipedia.org/wiki/Luminance_(relative)
-	red *= 0.2126f; green *= 0.7152f; blue *= 0.0722f;
+    red *= 0.2126f; green *= 0.7152f; blue *= 0.0722f;
     luminance = red + green + blue;
     
     return (luminance > 0.5f) ? hsba(0, 0, 15, alpha) : hsba(192, 2, 95, alpha);
@@ -415,9 +415,9 @@
         //Read the RGB values from the context's buffer
         uint8_t *data = CGBitmapContextGetData(ctx);
         backgroundColor = [UIColor colorWithRed:data[2] / 255.0f
-                                         green:data[1] / 255.0f
-                                          blue:data[0] / 255.0f
-                                         alpha:1];
+                                          green:data[1] / 255.0f
+                                           blue:data[0] / 255.0f
+                                          alpha:1];
         UIGraphicsEndImageContext();
     }
     
@@ -432,7 +432,7 @@
     }
     
     // Relative luminance in colorimetric spaces - http://en.wikipedia.org/wiki/Luminance_(relative)
-	red *= 0.2126f; green *= 0.7152f; blue *= 0.0722f;
+    red *= 0.2126f; green *= 0.7152f; blue *= 0.0722f;
     luminance = red + green + blue;
     
     if (flat == NO) {
@@ -469,22 +469,23 @@
             [backgroundGradientLayer setEndPoint:CGPointMake(1.0, 0.5)];
             
             //Convert our CALayer to a UIImage object
-            UIGraphicsBeginImageContext(backgroundGradientLayer.bounds.size);
+            UIGraphicsBeginImageContextWithOptions(backgroundGradientLayer.bounds.size, NO, [UIScreen mainScreen].scale);
+            
             [backgroundGradientLayer renderInContext:UIGraphicsGetCurrentContext()];
             UIImage *backgroundColorImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-        
+            
             [self setGradientImage:backgroundColorImage];
             return [UIColor colorWithPatternImage:backgroundColorImage];
         }
             
         case UIGradientStyleRadial: {
             
-            UIGraphicsBeginImageContextWithOptions(frame.size, 0, 1);
+            UIGraphicsBeginImageContextWithOptions(frame.size, NO, [UIScreen mainScreen].scale);
             
             //Specific the spread of the gradient (For now this gradient only takes 2 locations)
             CGFloat locations[2] = {0.0, 1.0};
-
+            
             //Default to the RGB Colorspace
             CGColorSpaceRef myColorspace = CGColorSpaceCreateDeviceRGB();
             CFArrayRef arrayRef = (__bridge CFArrayRef)cgColors;
@@ -492,7 +493,7 @@
             //Create our Fradient
             CGGradientRef myGradient = CGGradientCreateWithColors(myColorspace, arrayRef, locations);
             
- 
+            
             // Normalise the 0-1 ranged inputs to the width of the image
             CGPoint myCentrePoint = CGPointMake(0.5 * frame.size.width, 0.5 * frame.size.height);
             float myRadius = MIN(frame.size.width, frame.size.height) * 1.0;
@@ -521,7 +522,7 @@
             backgroundGradientLayer.colors = cgColors;
             
             //Convert our CALayer to a UIImage object
-            UIGraphicsBeginImageContext(backgroundGradientLayer.bounds.size);
+            UIGraphicsBeginImageContextWithOptions(backgroundGradientLayer.bounds.size,NO, [UIScreen mainScreen].scale);
             [backgroundGradientLayer renderInContext:UIGraphicsGetCurrentContext()];
             UIImage *backgroundColorImage = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
@@ -613,14 +614,14 @@
             
         case UIShadeStyleLight:
         default: {
-        
+            
             NSArray *lightColors = @[FlatBlack, FlatBlue, FlatBrown, FlatCoffee, FlatForestGreen, FlatGray, FlatGreen, FlatLime, FlatMagenta, FlatMaroon, FlatMint, FlatNavyBlue, FlatOrange, FlatPink, FlatPlum, FlatPowderBlue, FlatPurple, FlatRed, FlatSand, FlatSkyBlue, FlatTeal, FlatWatermelon, FlatWhite, FlatYellow];
             
             randomColor = [lightColors objectAtIndex:randomColorChosen];
         }
-
-    return randomColor;
-    
+            
+            return randomColor;
+            
     }
 }
 
@@ -638,7 +639,7 @@
 //More info: http://en.wikipedia.org/wiki/Color_difference
 + (float)totalSumOfDifferencesFroml1:(CGFloat)L1 l2:(CGFloat)L2 a1:(CGFloat)A1
                                   a2:(CGFloat)A2 b1:(CGFloat)B1 b2:(CGFloat)B2 {
-
+    
     //Get C Values in LCH from LAB Values
     CGFloat C1 = sqrt(pow(A1, 2) + pow(B1, 2));
     CGFloat C2 = sqrt(pow(A2, 2) + pow(B2, 2));
@@ -746,12 +747,12 @@
             }
         }
     }
-
+    
     
     //Collect the RGB Values of the color where the smallest difference was found
     CGFloat red, green, blue;
     [[[self flatColors] objectAtIndex:index] getRed:&red green:&green blue:&blue alpha:nil];
-
+    
     //Return the closest flat color
     return rgba(red*255, green*255, blue*255, alpha);
 }
